@@ -1,17 +1,26 @@
+import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import Hierarchy from "./Hierarchy";
 
 export default function App() {
+  const [newData, setNewData] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/data.xlsx")
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => {
+        const workbook = XLSX.read(buffer, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet);
+
+        console.log("Excel Loaded From Public:", json);
+        setNewData(json);
+      });
+  }, []);
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        width: "100vw",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Hierarchy rawData={data} />
+    <div className="min-h-screen w-screen flex items-center justify-center bg-white">
+      <Hierarchy rawData={newData} />
     </div>
   );
 }
