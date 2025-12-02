@@ -31,12 +31,11 @@ const Hierarchy = ({ rawData }) => {
   const mainLeader = rawData.find(
     (item) => item.role === "સર સંવાહક" && item.subzone2 === selectedZone
   );
-  const activeZone = mainLeader?.zone;
 
   // -----------------------------
   // 3. Filter Members inside the SAME ZONE
   // -----------------------------
-  const filteredMembers = rawData.filter((x) => x.zone === activeZone);
+  const filteredMembers = rawData.filter((x) => x.zone === selectedZone);
   const sanvahak = filteredMembers.filter((x) => x.role === "સંવાહક");
   const vahak = filteredMembers.filter((x) => x.role === "વાહક");
 
