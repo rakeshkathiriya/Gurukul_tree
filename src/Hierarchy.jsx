@@ -2,10 +2,21 @@ import { useState } from "react";
 
 const Hierarchy = ({ rawData }) => {
   const zones = [...new Set(rawData.map((item) => item.zone))].sort((a, b) => {
-    const numA = parseInt(a.replace("Z", ""));
-    const numB = parseInt(b.replace("Z", ""));
+    const prefixA = a[0]; // Z or L
+    const prefixB = b[0]; // Z or L
+
+    // Sort by prefix first (Z first, then L)
+    if (prefixA !== prefixB) {
+      return prefixA.localeCompare(prefixB);
+    }
+
+    // When both are same group (both Z or both L)
+    const numA = parseInt(a.slice(1)); // e.g. "01"
+    const numB = parseInt(b.slice(1));
+
     return numA - numB;
   });
+  console.log(zones);
   const [selectedZone, setSelectedZone] = useState(zones[0]);
 
   // Filter by Zone
@@ -45,21 +56,23 @@ const Hierarchy = ({ rawData }) => {
       {/* Top Leader */}
       <h2 style={{ fontSize: 28 }}>સર સંવાહક</h2>
 
-      <div
-        style={{
-          border: "2px solid black",
-          borderRadius: 20,
-          padding: 20,
-          display: "inline-block",
-          minWidth: 300,
-          fontSize: 18,
-        }}
-      >
-        <div style={{ fontWeight: "bold" }}>
-          {mainLeader.zone} – {mainLeader.reporting_to}
+      {mainLeader && (
+        <div
+          style={{
+            border: "2px solid black",
+            borderRadius: 20,
+            padding: 20,
+            display: "inline-block",
+            minWidth: 300,
+            fontSize: 18,
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>
+            {mainLeader.zone} – {mainLeader.reporting_to}
+          </div>
+          <div>{mainLeader.mobile}</div>
         </div>
-        <div>{mainLeader.mobile}</div>
-      </div>
+      )}
 
       {/* સંવાહક */}
       <h3 style={{ fontSize: 24, marginTop: 20 }}>સંવાહક</h3>
